@@ -6,7 +6,7 @@ from rest_framework.parsers import JSONParser
 from rest_framework import status
 
 from challenge.models import Challenge
-from challenge,serializer import ChallengeSerializer 
+from challenge.serializers import ChallengeSerializer 
 
 @csrf_exempt
 def challenge_list(request):
@@ -16,7 +16,8 @@ def challenge_list(request):
         return JsonResponse(challenge_serializer.data, safe=False)
 
     elif request.method == 'POST':
-            challenge_serializer = ChallengeSerializer(data=challengedata)
+            challenge_data = JSONParser().parse(request)    
+            challenge_serializer = ChallengeSerializer(data=challenge_data)
             if challenge_serializer.is_valid():
                 challenge_serializer.save() 
                 return JsonResponse(challenge_serializer.data, status=status.HTTP_201_CREATED) 
